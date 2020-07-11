@@ -2,60 +2,54 @@ import os
 import pickle
 import time
 import yaml
-from pprint import pprint
 
 from plyer import notification
 
 import requests
 
-f = open('config.yaml', 'r')
-cfg = yaml.safe_load(f)
-f.close()
+with open('config.yaml', 'r') as config:
+    cfg = yaml.safe_load(config)
 
 
-def save_data(data):
-    """Serialize data to PATH."""
-    with open(cfg['products_path'], 'wb') as f:
-        pickle.dump(data, f)
+def save_listing(listing):
+    """Save listing to `cfg['listing_path']` as specified in `config.yaml`."""
+    with open(cfg['listing_path'], 'wb') as f:
+        pickle.dump(listing, f)
 
 
-def load_data():
-    """Return either a serialized list from PATH or return an empty list."""
-    if os.path.exists(cfg['products_path']):
-        with open(cfg['products_path'], 'rb') as f:
+def load_listing():
+    """Return either a loaded listing from `cfg['listing_path']` or an empty list."""
+    if os.path.exists(cfg['listing_path']):
+        with open(cfg['listing_path'], 'rb') as f:
             return pickle.load(f)
     else:
         return []
 
-# LOAD PRODUCTS
-loaded_products = load_data()
-# LOAD PRODUCTS
+
+def get_new_listing(old_listing):
+    """Get the new listing."""
+    fetched_listing = requests.get(cfg['api_url']).json()['product']
+
+    old_item_ids = {old_item['productId'] for old_item in old_listing}
+    new_listing = [fetched_item for fetched_item in fetched_listing if
+                   fetched_item['productId'] not in old_item_ids]
+
+    if new_listing:
+        save_listing(new_listing)
+
+    return new_listing
 
 
-def get_new_products(all=False):
-    """Get all the new products."""
-    data = requests.get('https://www.afbostader.se/redimo/rest/vacantproducts?lang=sv_SE&type=1').json()
-    products = data['product']
-    save_data(products)
-    if all:
-        return products
-
-    loaded_ids = {loaded_product['productId'] for loaded_product in loaded_products}  # Set comprehension! Hell yeah!
-    new_products = [product for product in products if product['productId'] not in loaded_ids]
-
-    return new_products
-
-
-def send_notifcations(*products):
-    """Send notifcations about each product."""
+def send_notifcations(*items):
+    """Send notifications for each item, unpacked from a listing."""
     # CHARMAX TOTAL: 140
     # CHARMAX LINE: 35
-    for p in products:
+    for i in items:
         title = "Ny annons!"
-        message = f"{p['address']}\n" \
-                  f"{p['shortDescription']} {p['sqrMtrs']}kvm\n" \
-                  f"{p['rent']}kr/mån\n" \
-                  f"Inflyttningsdatum: {p['moveInDate']}"
+        message = f"{i['address']}\n" \
+                  f"{i['shortDescription']} {i['sqrMtrs']}kvm\n" \
+                  f"{i['rent']}kr/mån\n" \
+                  f"Inflyttningsdatum: {i['moveInDate']}"
         app_name = 'Bostadsannonserare'
         timeout = cfg['timeout']
 
@@ -66,10 +60,12 @@ def send_notifcations(*products):
 def main():
     """Run the program."""
     run = True
+    listing = load_listing()
     while run:
-        new_products = get_new_products()
-        if new_products:
-            send_notifcations(*new_products)
+        new_listing = get_new_listing(old_listing=listing)
+        if new_listing:
+            send_notifcations(*new_listing)
+            listing = new_listing
         time.sleep(cfg['cooldown'])
 
 

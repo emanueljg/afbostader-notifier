@@ -1,14 +1,21 @@
 # Changes take place after restart (if enabled in startup) or manually through (re)starting notifier.exe.
 
+# Path to the config.yaml file.
+# Default: config.yaml
+config_path: config.yaml
 
-# Path to the products pickle file.
-products_path: products
+# Path to the listing pickle file.
+# Default: listing
+listing_path: listing
 
 # Url to the restful Afbostader API.
+# Default: https://www.afbostader.se/redimo/rest/vacantproducts?lang=sv_SE&type=1
 api_url: https://www.afbostader.se/redimo/rest/vacantproducts?lang=sv_SE&type=1
 
 # Notification timeout, in seconds.
+# Default: 10s
 timeout: 10
 
 # How long the program waits until doing a new search, in seconds.
+# Default: 1800s (30 minutes)
 cooldown: 1800
