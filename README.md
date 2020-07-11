@@ -1,6 +1,6 @@
 ## afbostader-notifier
 
-Notifies users about new listing in AF Bostäder, using [plyer](https://github.com/kivy/plyer),
+Notifies you about the listing at AF Bostäder being updated, using [plyer](https://github.com/kivy/plyer),
 with the RESTful API being accessed by a `GET` through [requests](https://github.com/psf/requests).
 To edit the behaviour of the program, refer to the [config.yml](config.yaml).
 
