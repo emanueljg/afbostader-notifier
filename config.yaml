@@ -1,0 +1,14 @@
+# Changes take place after restart (if enabled in startup) or manually through (re)starting notifier.exe.
+
+
+# Path to the products pickle file.
+products_path: products
+
+# Url to the restful Afbostader API.
+api_url: https://www.afbostader.se/redimo/rest/vacantproducts?lang=sv_SE&type=1
+
+# Notification timeout, in seconds.
+timeout: 10
+
+# How long the program waits until doing a new search, in seconds.
+cooldown: 1800
