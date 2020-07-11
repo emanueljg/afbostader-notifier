@@ -11,7 +11,7 @@ To edit the behaviour of the program, refer to the [config.yml](config.yaml).
 
 #### Installation:
 1. `git clone https://github.com/emanueljg/afbostader-notifier.git` **OR** simply download the `.zip`.
-2. Run `notifier-program\install.exe`
+2. Run `notifier-program\install.bat`
 3. Done! The program will now run at start-up. 
    If you wish to disable this, follow [this guide](https://support.microsoft.com/en-us/help/4026268/windows-10-change-startup-apps).
 
