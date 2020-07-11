@@ -51,9 +51,11 @@ def send_notifcations(*items):
                   f"{i['rent']}kr/mån\n" \
                   f"Inflyttningsdatum: {i['moveInDate']}"
         app_name = 'Bostadsannonserare'
+        app_icon = 'building.ico' if os.path.dirname(os.getcwd()) == 'notifier' else r'notifier-program\notifier\building.ico'
+
         timeout = cfg['timeout']
 
-        notification.notify(title=title, message=message, app_name=app_name, timeout=timeout)
+        notification.notify(title=title, message=message, app_name=app_name, app_icon=app_icon, timeout=timeout)
         time.sleep(timeout)
 
 
