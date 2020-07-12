@@ -63,7 +63,6 @@ def send_notifcations(*items):
 
 
 def main():
-    return
     """Run the program."""
     run = True
     listing = load_listing()
