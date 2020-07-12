@@ -17,5 +17,5 @@ api_url: https://www.afbostader.se/redimo/rest/vacantproducts?lang=sv_SE&type=1
 timeout: 10
 
 # How long the program waits until doing a new search, in seconds.
-# Default: 1800s (30 minutes)
-cooldown: 1800
+# Default: 600s (10 minutes)
+cooldown: 600
