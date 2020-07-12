@@ -28,16 +28,19 @@ def load_listing():
 
 def get_new_listing(old_listing):
     """Get the new listing."""
-    fetched_listing = requests.get(cfg['api_url']).json()['product']
+    try:
+        fetched_listing = requests.get(cfg['api_url']).json()['product']
+    except requests.exceptions.RequestException:
+        return old_listing
+    else:
+        old_item_ids = {old_item['productId'] for old_item in old_listing}
+        new_listing = [fetched_item for fetched_item in fetched_listing if
+                       fetched_item['productId'] not in old_item_ids]
 
-    old_item_ids = {old_item['productId'] for old_item in old_listing}
-    new_listing = [fetched_item for fetched_item in fetched_listing if
-                   fetched_item['productId'] not in old_item_ids]
+        if new_listing:
+            save_listing(new_listing)
 
-    if new_listing:
-        save_listing(new_listing)
-
-    return new_listing
+        return new_listing
 
 
 def send_notifcations(*items):
@@ -60,6 +63,7 @@ def send_notifcations(*items):
 
 
 def main():
+    return
     """Run the program."""
     run = True
     listing = load_listing()
